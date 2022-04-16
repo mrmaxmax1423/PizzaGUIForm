@@ -51,7 +51,6 @@ public class PizzaGUIFrame extends JFrame{
         setSize(600,400);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setVisible(true);
-
     }
 
     private void createOptionPanel()
@@ -69,7 +68,6 @@ public class PizzaGUIFrame extends JFrame{
         optionPanel.add(thinRB);
         optionPanel.add(regularRB);
         optionPanel.add(deepDishRB);
-
 
         regularRB.setSelected(true);
 
@@ -103,12 +101,8 @@ public class PizzaGUIFrame extends JFrame{
         optionPanel.add(olivesChB);
         optionPanel.add(extraCheeseChB);
         optionPanel.add(anchoviesChB);
-
-
-
     }
-
-
+    
     private void createOrderDisplayPanel()
     {
         orderDisplayPanel = new JPanel();
