@@ -21,6 +21,8 @@ public class PizzaGUIFrame extends JFrame{
     JCheckBox chickenChB;
     JCheckBox peppersChB;
     JCheckBox olivesChB;
+    JCheckBox extraCheeseChB;
+    JCheckBox anchoviesChB;
 
     JPanel orderDisplayPanel;
     JTextArea orderTextArea;
@@ -30,6 +32,7 @@ public class PizzaGUIFrame extends JFrame{
     JButton clearButton;
     JButton quitButton;
 
+    boolean orderPlaced = false;
     public PizzaGUIFrame()
     {
         mainPanel = new JPanel();
@@ -54,7 +57,7 @@ public class PizzaGUIFrame extends JFrame{
     private void createOptionPanel()
     {
         optionPanel = new JPanel();
-        optionPanel.setLayout(new GridLayout(4,3));
+        optionPanel.setLayout(new GridLayout(3,4));
 
         Border titledBorder = BorderFactory.createTitledBorder("Options");
         optionPanel.setBorder(titledBorder);
@@ -88,6 +91,8 @@ public class PizzaGUIFrame extends JFrame{
         chickenChB = new JCheckBox("Chicken");
         peppersChB = new JCheckBox("Peppers");
         olivesChB = new JCheckBox("Olives");
+        extraCheeseChB = new JCheckBox("Extra Cheese");
+        anchoviesChB = new JCheckBox("Anchovies");
 
         optionPanel.add(pepperoniChB);
         optionPanel.add(sausageChB);
@@ -95,15 +100,13 @@ public class PizzaGUIFrame extends JFrame{
         optionPanel.add(chickenChB);
         optionPanel.add(peppersChB);
         optionPanel.add(olivesChB);
+        optionPanel.add(extraCheeseChB);
+        optionPanel.add(anchoviesChB);
 
 
 
     }
 
-    private void createToppingSelectPanel()
-    {
-
-    }
 
     private void createOrderDisplayPanel()
     {
@@ -125,7 +128,9 @@ public class PizzaGUIFrame extends JFrame{
         orderButton = new JButton("Order");
         orderButton.addActionListener((ActionEvent ae) -> placeOrder());
         clearButton = new JButton("Clear");
+        clearButton.addActionListener((ActionEvent ae) -> clearOrder());
         quitButton = new JButton("Quit");
+        quitButton.addActionListener((ActionEvent ae) -> System.exit(0));
 
         controlPanel.add(orderButton);
         controlPanel.add(clearButton);
@@ -137,16 +142,45 @@ public class PizzaGUIFrame extends JFrame{
     private double subTotal;
     public void placeOrder()
     {
-        checkCrustAndSize();
-        checkToppings();
-        calculatePrice();
+        if(!orderPlaced)
+        {
+            addSeparators();
+            checkCrustAndSize();
+            checkToppings();
+            calculatePrice();
+            addSeparators();
+            orderPlaced = true;
+        }
+    }
+
+    public void clearOrder()
+    {
+        pepperoniChB.setSelected(false);
+        sausageChB.setSelected(false);
+        baconChB.setSelected(false);
+        chickenChB.setSelected(false);
+        peppersChB.setSelected(false);
+        olivesChB.setSelected(false);
+
+        regularRB.setSelected(true);
+        sizeSelectCB.setSelectedIndex(0);
+
+        orderTextArea.setText("");
+
+        subTotal = 0;
+        orderPlaced = false;
+    }
+
+    public void addSeparators()
+    {
+        orderTextArea.append("================================================================================ \n");
     }
 
     public void checkToppings()
     {
-        ArrayList<JCheckBox> toppingButtons= new ArrayList<JCheckBox>(Arrays.asList(pepperoniChB,sausageChB,baconChB, chickenChB, peppersChB, olivesChB));
+        ArrayList<JCheckBox> toppingButtons= new ArrayList<JCheckBox>(Arrays.asList(pepperoniChB,sausageChB,baconChB, chickenChB, peppersChB, olivesChB, extraCheeseChB, anchoviesChB));
         ArrayList<String> selectedToppings = new ArrayList<>();
-        for(int i = 0; i < 6; i++)
+        for(int i = 0; i < 8; i++)
         {
             if(toppingButtons.get(i).isSelected()) //check what buttons are selected and store selected ingredient names in an ArrayList
             {
@@ -154,15 +188,16 @@ public class PizzaGUIFrame extends JFrame{
             }
 
         }
-        orderTextArea.append("Toppings:   ");
+        orderTextArea.append("Toppings:  ");
         for(int l = 0 ; l < selectedToppings.size() ; l++)
         {
             subTotal += 1.0;
             if(l < selectedToppings.size() - 1)
                 orderTextArea.append(selectedToppings.get(l) + ", ");
             else
-                orderTextArea.append(selectedToppings.get(l) + "\n");
+                orderTextArea.append(selectedToppings.get(l));
         }
+        orderTextArea.append("    $" + selectedToppings.size() + ".00 \n");
 
     }
 
@@ -171,31 +206,46 @@ public class PizzaGUIFrame extends JFrame{
         double tax = subTotal * .07;
         double totalPrice = subTotal + tax;
 
-        orderTextArea.append("Sub Total: " + String.format("%.2f",subTotal) + "\n");
-        orderTextArea.append("Tax:            " + String.format("%.2f",tax) +"\n");
-        orderTextArea.append("Total Price:    " + String.format("%.2f",totalPrice) + "\n");
+        orderTextArea.append("Sub Total:      $" + String.format("%.2f",subTotal) + "\n");
+        orderTextArea.append("Tax:                 $" + String.format("%.2f",tax) +"\n");
+        orderTextArea.append("-------------------------------------------------------------------------------------------------------------------------------------------- \n");
+        orderTextArea.append("Total Price:    $" + String.format("%.2f",totalPrice) + "\n");
     }
 
     public void checkCrustAndSize()
     {
+        String chosenCrust = "";
+        if(thinRB.isSelected())
+        {
+            chosenCrust = "Thin";
+        }
+        if(regularRB.isSelected())
+        {
+            chosenCrust = "Regular";
+        }
+        if(deepDishRB.isSelected())
+        {
+            chosenCrust = "Deep-Dish";
+        }
+
         String chosenSize = sizeSelectCB.getSelectedItem().toString();
         if(chosenSize == "Small    ($8.00)"){
-            orderTextArea.append("Size:           Small ($8.00)\n");
+            orderTextArea.append("Style:            Small, "+ chosenCrust + "     $8.00 \n");
             subTotal += 8.0;
         }
         if(chosenSize == "Medium   ($12.00)")
         {
-            orderTextArea.append("Size:           Medium ($12.00)\n");
+            orderTextArea.append("Style:            Medium, "+ chosenCrust + "     $12.00 \n");
             subTotal += 12.0;
         }
         if(chosenSize == "Large    ($16.00)")
         {
-            orderTextArea.append("Size:           Large ($16.00)\n");
+            orderTextArea.append("Style:            Large, " + chosenCrust + "     $16.00 \n");
             subTotal += 16.0;
         }
         if(chosenSize == "Super    ($20.00)")
         {
-            orderTextArea.append("Size:           Super ($20.00)\n");
+            orderTextArea.append("Style:            Super, " + chosenCrust + "     $20.00 \n");
             subTotal += 20.0;
         }
     }
