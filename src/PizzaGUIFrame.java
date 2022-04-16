@@ -70,6 +70,7 @@ public class PizzaGUIFrame extends JFrame{
         optionPanel.add(regularRB);
         optionPanel.add(deepDishRB);
 
+
         regularRB.setSelected(true);
 
         ButtonGroup crustChoicesGroup = new ButtonGroup();
@@ -161,7 +162,8 @@ public class PizzaGUIFrame extends JFrame{
         chickenChB.setSelected(false);
         peppersChB.setSelected(false);
         olivesChB.setSelected(false);
-
+        extraCheeseChB.setSelected(false);
+        anchoviesChB.setSelected(false);
         regularRB.setSelected(true);
         sizeSelectCB.setSelectedIndex(0);
 
@@ -230,22 +232,22 @@ public class PizzaGUIFrame extends JFrame{
 
         String chosenSize = sizeSelectCB.getSelectedItem().toString();
         if(chosenSize == "Small    ($8.00)"){
-            orderTextArea.append("Style:            Small, "+ chosenCrust + "     $8.00 \n");
+            orderTextArea.append("Size, Style:   Small, "+ chosenCrust + "     $8.00 \n");
             subTotal += 8.0;
         }
         if(chosenSize == "Medium   ($12.00)")
         {
-            orderTextArea.append("Style:            Medium, "+ chosenCrust + "     $12.00 \n");
+            orderTextArea.append("Size, Style:   Medium, "+ chosenCrust + "     $12.00 \n");
             subTotal += 12.0;
         }
         if(chosenSize == "Large    ($16.00)")
         {
-            orderTextArea.append("Style:            Large, " + chosenCrust + "     $16.00 \n");
+            orderTextArea.append("Size, Style:   Large, " + chosenCrust + "     $16.00 \n");
             subTotal += 16.0;
         }
         if(chosenSize == "Super    ($20.00)")
         {
-            orderTextArea.append("Style:            Super, " + chosenCrust + "     $20.00 \n");
+            orderTextArea.append("Size, Style:   Super, " + chosenCrust + "     $20.00 \n");
             subTotal += 20.0;
         }
     }
